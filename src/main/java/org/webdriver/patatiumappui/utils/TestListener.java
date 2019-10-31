@@ -1,12 +1,15 @@
 package org.webdriver.patatiumappui.utils;
 
 import org.openqa.selenium.WebDriver;
+import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -14,7 +17,7 @@ import java.util.List;
  * @author zhengshuheng 郑树恒
  *
  */
-public class TestListener  extends TestListenerAdapter{
+public class TestListener extends TestListenerAdapter{
 	Log log=new Log(this.getClass());
 	//输出失败结果详情
 	public static StringBuffer sb=new StringBuffer("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<failed>\n");
@@ -47,6 +50,7 @@ public class TestListener  extends TestListenerAdapter{
 		ScreenShot screenShot=new ScreenShot(driver);
 		//设置截图名字
 		screenShot.setscreenName(tr.getMethod().getDescription()+Assertion.errorIndex.toString());
+		System.out.println("onTestFailure_PicName:"+tr.getMethod().getDescription()+Assertion.errorIndex.toString());
 		log.error(Assertion.errorIndex.toString());
 		screenShot.takeScreenshot();
 		for(int i=0;i<Assertion.messageList.size();i++)
@@ -143,6 +147,7 @@ public class TestListener  extends TestListenerAdapter{
 		ScreenShot screenShot=new ScreenShot(driver);
 		//设置截图名字
 		screenShot.setscreenName(tr.getMethod().getDescription());
+		System.out.println("onTestSkipped_PicName:"+tr.getMethod().getDescription()+Assertion.errorIndex.toString());
 		screenShot.takeScreenshot();
 		log.warn("测试用例: "+tr.getMethod().getDescription()+"--skipped");
 		log.info("测试用例:"+tr.getMethod().getDescription()+"---end");
@@ -201,5 +206,26 @@ public class TestListener  extends TestListenerAdapter{
 		}
 		return et;
 	}
+
+	//此代码2019.10.30添加，添加人LD
+	@Override
+	public void onFinish(ITestContext testContext) {
+		super.onFinish(testContext);
+		log.info("Test Finish");
+		Iterator<ITestResult> listOfFailedTests = testContext.getFailedTests().getAllResults().iterator();
+
+		while (listOfFailedTests.hasNext()) {
+			ITestResult failedTest = listOfFailedTests.next();
+			ITestNGMethod method = failedTest.getMethod();
+			if (testContext.getFailedTests().getResults(method).size() > 1) {
+				listOfFailedTests.remove();
+			} else {
+				if (testContext.getPassedTests().getResults(method).size() > 0) {
+					listOfFailedTests.remove();
+				}
+			}
+		}
+	}
+
 
 }

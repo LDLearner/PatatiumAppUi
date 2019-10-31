@@ -24,6 +24,39 @@
 		<locator type="id" timeout="3" value="com.tencent.mm:id/b5t"  desc="登录">登录按钮</locator>
 		<locator type="id" timeout="3" value="com.tencent.mm:id/avt"  desc="失败提示信息确认按钮">登录失败提示信息</locator>
 		<locator type="id" timeout="3" value="com.tencent.mm:id/bim"  desc="失败提示信息确认按钮">登录失败确认按钮</locator>
-
     </page>
+	<page pagename="org.webdriver.patatiumappui.pageObject.HefanLive" value="" desc="盒饭liveApp">
+		//登录页
+		<locator type="id" timeout="3" value="com.starunion.hefantv:id/iv_splash_guide_jump"  desc="打开盒饭live">打开盒饭live</locator>
+		<locator type="id" timeout="3" value="com.starunion.hefantv:id/iv_visitor_login_close"  desc="登录框关闭按钮">登录框关闭按钮</locator>
+		//首页
+		<locator type="xpath" timeout="3" value="//android.widget.LinearLayout[@resource-id='com.starunion.hefantv:id/ll_search_top']/android.widget.RelativeLayout[1]"  desc="首页搜索框">首页搜索框</locator>
+		<locator type="xpath" timeout="3" value="//android.widget.EditText[@resource-id='com.starunion.hefantv:id/et_new_search']"  desc="搜索页搜索框">搜索页搜索框</locator>
+		<locator type="id" timeout="3" value="com.starunion.hefantv:id/tv_new_search_search"  desc="搜索按钮">搜索按钮</locator>
+		<locator type="id" timeout="3" value="com.starunion.hefantv:id/fl_new_search_close"  desc="搜索页返回按钮">搜索页返回按钮</locator>
+		<locator type="id" timeout="3" value="com.starunion.hefantv:id/iv_main_bottom_fan_club"  desc="下导航后援会">下导航后援会</locator>
+		//后援会
+		<locator type="id" timeout="3" value="com.starunion.hefantv:id/iv_no_joined"  desc="后援会引导页">后援会引导页</locator>
+		<locator type="id" timeout="3" value="com.starunion.hefantv:id/pub_navi_center_item_title"  desc="后援会列表页标题">后援会列表页标题</locator>
+		<locator type="id" timeout="3" value="com.starunion.hefantv:id/pub_navi_left_item"  desc="后援会列表页返回">后援会列表页返回</locator>
+
+		<locator type="id" timeout="3" value="com.jd.lib.jshop:id/fd"  desc="店铺返回">店铺返回</locator>
+		<locator type="id" timeout="3" value="com.jd.lib.productdetail:id/fd"  desc="商品返回">商品返回</locator>
+		<locator type="xpath" timeout="3" value="//android.widget.ImageView[@content-desc='浮层icon']"  desc="浮层icon">浮层icon</locator>
+		<locator type="xpath" timeout="3" value="//*[@id='app']/div[2]/div[1]/div[7]/div[3]"  desc="京东领金币">京东领金币</locator>
+		<locator type="xpath" timeout="3" value="//*[@id='app']/div[1]/div[2]/div[2]/div[3]/div/div[1]/div[3]"  desc="逛逛好店">逛逛好店</locator>
+		<locator type="xpath" timeout="3" value="//*[@id='app']/div[1]/div[2]/div[2]/div[3]/div/div[3]/div[3]"  desc="精选好物">精选好物</locator>
+		<locator type="xpath" timeout="3" value="//*[@id='app']/div[1]/div[2]/div[2]/div[3]/div/div[2]/div[3]"  desc="精彩会场">精彩会场</locator>
+		<locator type="xpath" timeout="3" value="//*[@id='app']/div[1]/div[2]/div[2]/div[3]/div/div[4]/div[3]"  desc="更多好玩互动">更多好玩互动</locator>
+		<locator type="xpath" timeout="3" value="//*[@id='app']/div[1]/div[2]/div[2]/div[3]/div/div[6]/div[3]"  desc="看直播">看直播</locator>
+		<locator type="xpath" timeout="3" value="//*[@id='app']/div[1]/div[1]/div[2]/div/div[2]/div[3]"  desc="朕知道了">朕知道了</locator>
+
+
+
+
+
+
+
+
+	</page>
 </map>

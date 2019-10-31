@@ -1,11 +1,17 @@
 import org.dom4j.DocumentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 import org.webdriver.patatiumappui.action.LoginAction;
 import org.webdriver.patatiumappui.pageObject.LoginPage;
 import org.webdriver.patatiumappui.pageObject.StartPage;
-import org.webdriver.patatiumappui.utils.*;
+import org.webdriver.patatiumappui.utils.Assertion;
+import org.webdriver.patatiumappui.utils.ElementAction;
+import org.webdriver.patatiumappui.utils.ExcelReadUtil;
+import org.webdriver.patatiumappui.utils.TestBaseCase;
 
 import java.io.IOException;
 
@@ -17,6 +23,7 @@ public class LoginTest extends TestBaseCase {
     @BeforeClass
     public  void  beforeclass() throws IOException {
         StartPage startPage=new StartPage();
+        action.sleep(2);
         action.click(startPage.登录());
         LoginPage loginPage=new LoginPage();
         action.sleep(2);
@@ -59,6 +66,7 @@ public class LoginTest extends TestBaseCase {
     public  void openResult()
     {
         WebDriver driver =new FirefoxDriver();
-        driver.get("http://127.0.0.1");
+        //driver.get("http://127.0.0.1");
+        driver.get("D:\\JavaCode\\PatatiumAppUi\\test-output\\report.html");
     }
 }

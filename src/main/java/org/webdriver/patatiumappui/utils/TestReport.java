@@ -839,27 +839,26 @@ public class TestReport implements IReporter{
 			sb2.append("</div>\n"
 					+ "<div id=\"footer\" style=\"font-size:14px\" >技术支持：Copyright © 2014 Webdriver中文社区.Inc</div>");
 			sb2.append("</body>\n</html>\n");
-			System.out.println("收件人地址："+Recipients);
-			SendMail sendMail=new SendMail();
-			String smtpUserName="";
-			String smtpPassWord="";
-			String smtpHost="";
-			String smtpPort="";
-			String mailTitle="";
-			try {
-				smtpUserName=getTestngParametersValue(Config.path,"smtpUserName");
-				smtpPassWord=getTestngParametersValue(Config.path,"smtpPassWord");
-				smtpHost=getTestngParametersValue(Config.path,"smtpHost");
-				smtpHost=getTestngParametersValue(Config.path,"smtpHost");
-				mailTitle=getTestngParametersValue(Config.path,"mailTitle");
-			} catch (DocumentException e) {
-				e.printStackTrace();
-			}
-			sendMail.sendmessage(smtpUserName,smtpPassWord, smtpHost, smtpPort, smtpUserName,Recipients,mailTitle, sb2.toString());
+
+//			System.out.println("收件人地址："+Recipients);
+//			SendMail sendMail=new SendMail();
+//			String smtpUserName="";
+//			String smtpPassWord="";
+//			String smtpHost="";
+//			String smtpPort="";
+//			String mailTitle="";
+//			try {
+//				smtpUserName=getTestngParametersValue(Config.path,"smtpUserName");
+//				smtpPassWord=getTestngParametersValue(Config.path,"smtpPassWord");
+//				smtpHost=getTestngParametersValue(Config.path,"smtpHost");
+//				smtpHost=getTestngParametersValue(Config.path,"smtpHost");
+//				mailTitle=getTestngParametersValue(Config.path,"mailTitle");
+//			} catch (DocumentException e) {
+//				e.printStackTrace();
+//			}
+//			sendMail.sendmessage(smtpUserName,smtpPassWord, smtpHost, smtpPort, smtpUserName,Recipients,mailTitle, sb2.toString());
 			//--发送html报表邮件--结束
-
-
-
+			System.out.println("发送邮件功能被注释掉了，如需使用请前往TestReport.java文件取消注释");
 
 		} catch (IOException e) {
 			e.printStackTrace();

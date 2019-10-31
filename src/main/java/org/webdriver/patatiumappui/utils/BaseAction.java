@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class BaseAction extends TestBaseCase{
-
 	protected HashMap<String,Locator>  locatorMap;
 	public String path=null;
 	public InputStream path_inputStream_1;
@@ -104,7 +103,7 @@ public class BaseAction extends TestBaseCase{
 		/**
 		 * 在对象库通过对象名字查找定位信息
 		 */
-		locator=locatorMap.get(locatorName);
+			locator=locatorMap.get(locatorName);
 		/**
 		 * 加入对象库，找不到该定位信息，就创建一个定位信息
 		 */

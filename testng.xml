@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<!--<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">-->
 <suite name="Suite" >
-    <parameter name="driverName" value="AndroidDriver" />   <!--driver驱动：安卓，IOS-->
+   <parameter name="driverName" value="AndroidDriver" />   <!--driver驱动：安卓，IOS-->
     <parameter name="nodeURL" value="127.0.0.1:4723" /> <!--appium-server 地址-->
-    <parameter name="appName" value="weixin_861.apk" />  <!--app包名字-->
+    <parameter name="appName" value="JDMALL-PC2.apk" />  <!--app包名字-->
     <parameter name="platformName" value="Android" /> <!--app运行平台:安卓，IOS-->
-    <parameter name="deviceName" value="127.0.0.1:62001" /> <!--手机或者虚拟机设备名字-->
-    <parameter name="sdkVersion" value="6.0" /><!--安卓,IOS SDK版本-->
-    <parameter name="appMainPackage" value="com.tencent.mm" /><!--app主包名-->
-    <parameter name="appActivity" value="com.tencent.mm.ui.LauncherUI" /> <!--app 主类名-->
+    <parameter name="deviceName" value="PFVSFUWK99999999" /> <!--手机或者虚拟机设备名字-->
+    <parameter name="sdkVersion" value="5.0.2" /><!--安卓,IOS SDK版本-->
+    <!--<parameter name="appMainPackage" value="com.starunion.hefantv" />&lt;!&ndash;app主包名&ndash;&gt;-->
+    <!--<parameter name="appActivity" value=".splash.SplashActivity" /> &lt;!&ndash;app 主类名&ndash;&gt;-->
+    <parameter name="appMainPackage" value="com.jingdong.app.mall" /><!--app主包名-->
+    <parameter name="appActivity" value=".MainFrameActivity" /> <!--app 主类名-->
     <parameter name="UserName" value="" /> <!-- 系统登录用户名-->
     <parameter name="PassWord" value="" />  <!-- 系统登录密码-->
     <parameter name="smtpUserName" value="" />  <!-- 测试报告邮件发送：smtp身份证验证-->
@@ -24,23 +26,39 @@
     <listeners><!-- 监听器设置-->
         <listener class-name="org.webdriver.patatiumappui.utils.TestListener"/>
         <listener class-name="org.webdriver.patatiumappui.utils.TestReport"/>
+        <listener class-name="org.webdriver.patatiumappui.ld.RetryListener"/>
     </listeners>
-    <test name="登录测试">
+    <test name="盒饭live测试">
         <classes>
-            <class name="LoginTest">
-                <methods>
-                    <include name="login"/>
-                </methods>
+            <!--<class name="HF_HomePage">-->
+                <!--<methods>-->
+                    <!--&lt;!&ndash;<include name="HF_base"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="HF_search"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="JD_H5"/>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<include name="HF_HYH"/>&ndash;&gt;-->
+                <!--</methods>-->
+            <!--</class>-->
+            <class name="TestCase">
+                <include name="TestCase"/>
             </class>
         </classes>
     </test>
-    <test name="登录失败测试：数据驱动">
-        <classes>
-            <class name="LoginTest">
-                <methods>
-                    <include name="loginFail"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
+    <!--<test name="登录测试">-->
+        <!--<classes>-->
+            <!--<class name="LoginTest">-->
+                <!--<methods>-->
+                    <!--<include name="login"/>-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
+    <!--<test name="登录失败测试：数据驱动">-->
+        <!--<classes>-->
+            <!--<class name="LoginTest">-->
+                <!--<methods>-->
+                    <!--<include name="loginFail"/>-->
+                <!--</methods>-->
+            <!--</class>-->
+        <!--</classes>-->
+    <!--</test>-->
 </suite> <!-- Suite -->

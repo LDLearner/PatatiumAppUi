@@ -1,26 +1,17 @@
 package org.webdriver.patatiumappui.utils;
-import org.testng.annotations.*;
-import org.webdriver.patatiumappui.utils.Log;
 
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Parameters;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 public class TestBaseCase {
 	public static AndroidDriver driver;
@@ -31,19 +22,20 @@ public class TestBaseCase {
 	@Parameters({"driverName","nodeURL","appName","deviceName","sdkVersion","appMainPackage","appActivity","platformName"})
 	public void  setup( String driverName,String nodeURL,String appName,String deviceName,String sdkVersion,String appMainPackage,String appActivity,String platformName) throws MalformedURLException {
 		log.info("------------------开始执行测试---------------");
-		//启动appium server
-		ElementAction action=new ElementAction();
-		log.info("通过cmd命令启动appium server");
-		try {
-			String cmd="appium -a " +
-					nodeURL.split(":")[0]+
-					"  -p "+nodeURL.split(":")[1];
-			System.out.println(cmd);
-			action.executeCmd(cmd);
-			action.sleep(10);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		//启动appium server
+//		ElementAction action=new ElementAction();
+//		log.info("通过cmd命令启动appium server");
+//		try {
+//			String cmd="appium -a " +
+//					nodeURL.split(":")[0]+
+//					"  -p "+nodeURL.split(":")[1];
+//			System.out.println(cmd);
+//			action.executeCmd(cmd);
+//			action.sleep(10);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		//启动appium server结束
 		if(nodeURL.equals("")||nodeURL.isEmpty())
 		{
 			log.error("appium url 没有设置");
@@ -106,9 +98,13 @@ public class TestBaseCase {
 				desiredCapabilities.setCapability("appMainPackage", appMainPackage);
 				desiredCapabilities.setCapability("appActivity", appActivity);
 				//设置支持中文输入
-				desiredCapabilities.setCapability("unicodeKeyboard", "True");
-				desiredCapabilities.setCapability("resetKeyboard", "True");
+				desiredCapabilities.setCapability("unicodeKeyboard", "False");
+				desiredCapabilities.setCapability("resetKeyboard", "False");
 				desiredCapabilities.setCapability("noSign", "True");
+				//其他设置
+				desiredCapabilities.setCapability("autoLaunch", "False");
+				desiredCapabilities.setCapability("noReset", "True");
+				//desiredCapabilities.setCapability("recreateChromeDriverSessions",true);
 				//初始化driver
 				driver= new AndroidDriver(new URL("http://"+nodeURL+"/wd/hub"), desiredCapabilities);
 				break;
