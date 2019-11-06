@@ -3,6 +3,8 @@ package org.webdriver.patatiumappui.utils;
 import com.google.common.io.Files;
 import io.appium.java_client.NetworkConnectionSetting;
 import io.appium.java_client.TouchAction;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -10,8 +12,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +44,35 @@ public class ElementAction extends TestBaseCase{
 		int state=driver.getNetworkConnection().value;
 		return state;
 	}
+	/**
+	 * 向手机push文件（LD添加）
+	 *
+	 */
+	public void pushFileFuc(String filePath,String pushPath)
+	{
+		File file = new File(filePath);
+		String content = null;
+		byte[] byteArray=null;
+		try {
+			byteArray = FileUtils.readFileToByteArray(file);
+		} catch (IOException e) {
+		e.printStackTrace();
+		}
+		driver.pushFile(pushPath, Base64.encodeBase64(byteArray));
+	}
+	/**
+	 * 从手机pull文件（LD添加）
+	 *
+	 */
+	public void pullFileFuc(String filePath,String pullPath) throws IOException {
+		File outfile = new File(pullPath);
+		byte resultDate[] =driver.pullFile(filePath);
+		OutputStream out = new FileOutputStream(outfile);
+		out.write(resultDate);
+		out.flush();
+		out.close();
+	}
+
 	/**
 	 * 设置网络状态
 	 *
@@ -722,7 +752,7 @@ public class ElementAction extends TestBaseCase{
 		//Waitformax(Integer.valueOf(locator.getWaitSec()));
 		WebElement webElement=null;
 		try {
-			webElement=(new WebDriverWait(driver, 20)).until(
+			webElement=(new WebDriverWait(driver, 2)).until(
 					new ExpectedCondition<WebElement>() {
 
 						@Override

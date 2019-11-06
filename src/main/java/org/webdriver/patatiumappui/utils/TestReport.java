@@ -31,11 +31,13 @@ public class TestReport implements IReporter{
 				ITestContext testContext = suiteResult.getTestContext();
 				IResultMap passedTests = testContext.getPassedTests();
 				IResultMap failedTests = testContext.getFailedTests();
+				IResultMap FailedButWithinSuccessPercentageTests = testContext.getFailedButWithinSuccessPercentageTests();
 				IResultMap skippedTests = testContext.getSkippedTests();
 				IResultMap failedConfig = testContext.getFailedConfigurations();
 				list.addAll(this.listTestResult(passedTests));
 				list.addAll(this.listTestResult(failedTests));
 				list.addAll(this.listTestResult(skippedTests));
+				list.addAll(this.listTestResult(FailedButWithinSuccessPercentageTests));
 				//list.addAll(this.listTestResult(failedConfig));
 			}
 		}
@@ -48,6 +50,7 @@ public class TestReport implements IReporter{
 			e.printStackTrace();
 		}
 		this.sort(list);
+		System.out.println("the list size:"+list.size());
 		this.outputResult(list, outputDirectory+"/report.html");
 
 
@@ -78,6 +81,7 @@ public class TestReport implements IReporter{
 			//BufferedWriter output = new BufferedWriter(new FileWriter(new File(path)));
 			StringBuffer sb = new StringBuffer();
 			for (ITestResult result : fullResults) {
+				System.out.println("result="+result.getName()+result.getStatus());
 				if(result.getStatus()==1)
 				{
 					passArrayList.add(result);
@@ -85,6 +89,12 @@ public class TestReport implements IReporter{
 				if(result.getStatus()==2)
 				{
 					failedArrayList.add(result);
+				}
+				if(result.getStatus()==4)
+				{
+					result.setStatus(2);
+					failedArrayList.add(result);
+
 				}
 				if(result.getStatus()==3)
 				{

@@ -140,6 +140,14 @@ public class TestListener extends TestListenerAdapter{
 		log.error("测试用例: "+tr.getMethod().getDescription()+"--failed");
 		log.info("测试用例:"+tr.getMethod().getDescription()+"---end");
 	}
+
+	@Override
+	public void onTestFailedButWithinSuccessPercentage(ITestResult tr) {
+		super.onTestFailedButWithinSuccessPercentage(tr);
+		System.out.println("onTestFailedButWithinSuccessPercentage:"+tr.getMethod().getDescription()+Assertion.errorIndex.toString()+tr.getStatus());
+		onTestFailure(tr);
+	}
+
 	@Override
 	public void onTestSkipped(ITestResult tr) {
 		TestBaseCase testBaseCase=(TestBaseCase) tr.getInstance();
@@ -211,9 +219,11 @@ public class TestListener extends TestListenerAdapter{
 	@Override
 	public void onFinish(ITestContext testContext) {
 		super.onFinish(testContext);
+
 		log.info("Test Finish");
 		Iterator<ITestResult> listOfFailedTests = testContext.getFailedTests().getAllResults().iterator();
-
+		Iterator<ITestResult> listOfSkippedTests = testContext.getSkippedTests().getAllResults().iterator();
+		Iterator<ITestResult> listOfFailedButWithinSuccessPercentageTests = testContext.getFailedButWithinSuccessPercentageTests().getAllResults().iterator();
 		while (listOfFailedTests.hasNext()) {
 			ITestResult failedTest = listOfFailedTests.next();
 			ITestNGMethod method = failedTest.getMethod();
@@ -225,6 +235,27 @@ public class TestListener extends TestListenerAdapter{
 				}
 			}
 		}
+		while (listOfSkippedTests.hasNext()) {
+			ITestResult SkippedTest = listOfSkippedTests.next();
+			ITestNGMethod method = SkippedTest.getMethod();
+			if (testContext.getPassedTests().getResults(method).size() > 0) {
+				listOfSkippedTests.remove();
+			}
+			if (testContext.getFailedTests().getResults(method).size() > 0) {
+				listOfSkippedTests.remove();
+			}
+			if (testContext.getFailedButWithinSuccessPercentageTests().getResults(method).size() > 0) {
+				listOfSkippedTests.remove();
+			}
+		}
+//		while (listOfFailedButWithinSuccessPercentageTests.hasNext()) {
+//			ITestResult FailedButWithinSuccessPercentageTest = listOfFailedButWithinSuccessPercentageTests.next();
+//			ITestNGMethod method = FailedButWithinSuccessPercentageTest.getMethod();
+//			if (testContext.getFailedButWithinSuccessPercentageTests().getResults(method).size() > 0) {
+//				listOfFailedButWithinSuccessPercentageTests.remove();
+//			}
+//		}
+
 	}
 
 
