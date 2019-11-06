@@ -34,12 +34,14 @@
                 <!--<methods>-->
                     <!--&lt;!&ndash;<include name="HF_base"/>&ndash;&gt;-->
                     <!--&lt;!&ndash;<include name="HF_search"/>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<include name="JD_H5"/>&ndash;&gt;-->
+                    <!--<include name="JD_H5"/>-->
                     <!--&lt;!&ndash;<include name="HF_HYH"/>&ndash;&gt;-->
                 <!--</methods>-->
             <!--</class>-->
             <class name="TestCase">
-                <include name="TestCase"/>
+                <methods>
+                <include name="TestCaseTmp"/>
+                </methods>
             </class>
         </classes>
     </test>
