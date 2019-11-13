@@ -24,13 +24,13 @@ public class HF_HomePage extends TestBaseCase {
     @Test(description = "盒饭live引导页测试",priority = 0)
     public  void HF_base() throws IOException {
         action.sleep(2);
-        action.swipe(1000,1000,150,1000,500);
-        action.sleep(1);
-        action.swipe(1000,1000,150,1000,500);
-        action.sleep(1);
-        action.swipe(1000,1000,150,1000,500);
-        action.sleep(1);
-        action.swipe(1000,1000,150,1000,500);
+//        action.swipe(1000,1000,150,1000,500);
+//        action.sleep(1);
+//        action.swipe(1000,1000,150,1000,500);
+//        action.sleep(1);
+//        action.swipe(1000,1000,150,1000,500);
+//        action.sleep(1);
+//        action.swipe(1000,1000,150,1000,500);
         action.sleep(1);
         action.click(HF.打开盒饭live());
         action.sleep(3);
@@ -40,7 +40,7 @@ public class HF_HomePage extends TestBaseCase {
         Assertion.VerityError();
         action.click(HF.登录框关闭按钮());
         action.sleep(1);
-        action.swipe(400,400,400,400,500);
+//        action.swipe(400,400,400,400,500);
     }
     private void runFuc(String btnName){
         System.out.println("开始执行"+btnName);
@@ -48,7 +48,7 @@ public class HF_HomePage extends TestBaseCase {
                 action.sleep(2);
                 action.click(HF.GetElement(btnName));
                 action.sleep(4);
-                action.pressAndroidKey(4);
+                //lidong action.pressAndroidKey(4);
                 action.sleep(4);
             try {
                 action.click(HF.GetElement("朕知道了"));

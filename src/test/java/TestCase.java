@@ -2,9 +2,11 @@
  * Created by ld_ab on 2019/10/30.
  */
 
+import io.appium.java_client.functions.ExpectedCondition;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.webdriver.patatiumappui.pageObject.HefanLive;
@@ -33,6 +35,7 @@ public class TestCase extends TestBaseCase {
         //无等待
         try {
             WebElement wb = driver.findElement(By.xpath(elementXpath));
+            WebElement wb2 = driver.findElementByAndroidUIAutomator("new");
             wb.click();
         }catch (TimeoutException e){
             Assertion.messageList.add("超时找不到所需页面元素["+elementXpath+"]:failed");
@@ -43,17 +46,12 @@ public class TestCase extends TestBaseCase {
         //explicitwait.click();
 
         //显性等待
-//        WebDriverWait wait = new WebDriverWait(driver, 10);
-//        WebElement we= wait.until(new  ExpectedCondition<WebElement>() {
-//            @Override
-//            public WebElement apply(WebDriver d) {
-//                return d.findElement(By.xpath(elementXpath));
-//            }
-//        });
-//        we.click();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebElement we= wait.until((ExpectedCondition<WebElement>) d -> d.findElement(By.xpath(elementXpath)));
+        we.click();
 
-        //action.click(HF.GetElement("首页搜索框"));
-        //action.click(HF.首页搜索框());
+//        action.click(HF.GetElement("首页搜索框"));
+//        action.click(HF.首页搜索框());
 
 //        //设置检查点
         System.out.println("检查点开始运行");
@@ -74,8 +72,12 @@ public class TestCase extends TestBaseCase {
 //    }
 @Test(description = "临时用例")
 public  void TestCaseTmp() throws IOException {
+    //action.sleep(5);
     //action.pushFileFuc("E:\\ld.jpg","/sdcard/download/ld.jpg");
-    action.pullFileFuc("/sdcard/download/ld.jpg","E:\\ldpull.jpg");
+    //action.pullFileFuc("/sdcard/download/ld.jpg","E:\\ldpull.jpg");
+
+    action.zoomOut();
+    System.out.println("Ending");
 }
 }
 

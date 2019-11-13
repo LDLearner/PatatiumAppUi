@@ -1,13 +1,13 @@
 package org.webdriver.patatiumappui.pageObjectConfig;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 public class GetXmlPageObject {
 
 	public  static void getXmlPageObject()
 	{
-		WebDriver driver=new FirefoxDriver();
+		WebDriver driver=new ChromeDriver();
 		driver.get("http://192.168.0.29:9020/hospital/load");
 		String tString=driver.getPageSource();
 		System.out.println(tString);

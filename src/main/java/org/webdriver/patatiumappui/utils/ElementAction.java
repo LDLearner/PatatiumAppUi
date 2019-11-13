@@ -1,22 +1,33 @@
 package org.webdriver.patatiumappui.utils;
 
 import com.google.common.io.Files;
-import io.appium.java_client.NetworkConnectionSetting;
+import io.appium.java_client.MultiTouchAction;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.nativekey.KeyEvent;
+import io.appium.java_client.functions.ExpectedCondition;
+import io.appium.java_client.touch.LongPressOptions;
+import io.appium.java_client.touch.TapOptions;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.ElementOption;
+import io.appium.java_client.touch.offset.PointOption;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,10 +38,10 @@ import java.util.concurrent.TimeUnit;
 public class ElementAction extends TestBaseCase{
 	private Log log=new Log(this.getClass());
 	public static ArrayList<Exception> noSuchElementExceptions=new ArrayList<Exception>();
-	TouchAction touchAction=new TouchAction(driver);
 	/**
 	 * 获取手机网络状态
 	 * Possible values:
+	 * 网络的bitmask掩码如下：
 	 Value (Alias)      | Data | Wifi | Airplane Mode
 	 -------------------------------------------------
 	 0 (None)           | 0    | 0    | 0
@@ -38,12 +49,96 @@ public class ElementAction extends TestBaseCase{
 	 2 (Wifi only)      | 0    | 1    | 0
 	 4 (Data only)      | 1    | 0    | 0
 	 6 (All network on) | 1    | 1    | 0
+	 bitMask用二进制表示：0b001,0b010,0b100,0b110
+	 driver.getConnection()返回当前手机的bitMask
 	 */
-	public int get_network_connection()
-	{
-		int state=driver.getNetworkConnection().value;
-		return state;
+	public boolean isAirplaneModeEnabled(){
+		return driver.getConnection().isAirplaneModeEnabled();
 	}
+	public boolean isWiFiEnabled(){
+		return driver.getConnection().isWiFiEnabled();
+	}
+	public boolean isDataEnabled(){
+		return driver.getConnection().isDataEnabled();
+	}
+	/**
+	 * 设置网络状态
+	 *通过bitMask设置网络状态开关，如当前关闭则打开，如当前打开则关闭
+	 */
+	public void setNetworkStateMode(int bitMask)
+	{
+		switch (bitMask){
+			case 0b001:
+				driver.toggleAirplaneMode();
+				break;
+			case 0b010:
+				driver.toggleWifi();
+				break;
+			case 0b100:
+				driver.toggleData();
+				break;
+			case 0b110:
+				driver.toggleWifi();
+				driver.toggleData();
+				System.out.println("double");
+				break;
+		}
+
+	}
+	/**
+	*打印出当前app所有context上下文（LD添加）
+	 * */
+	public void printContexts() {
+		Set<String> contextSet = driver.getContextHandles();
+		for (String context : contextSet) {
+			System.out.println(context);
+		}
+	}
+	/**
+	 * 多点触摸之放大屏幕（LD添加）
+	 *
+	 */
+	public void zoomIn()
+	{
+		MultiTouchAction multiTouchAction=new MultiTouchAction(driver);
+		TouchAction touchAction1=new TouchAction(driver);
+		TouchAction touchAction2=new TouchAction(driver);
+		//得到屏幕的宽度和高度
+		int x=driver.manage().window().getSize().getWidth();
+		int y=driver.manage().window().getSize().getHeight();
+
+		touchAction1.press(PointOption.point(x*4/10,y*4/10)).
+				waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1))).
+				moveTo(PointOption.point(x*2/10,y*2/10));
+		touchAction2.press(PointOption.point(x*6/10,y*6/10)).
+				waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1))).
+				moveTo(PointOption.point(x*8/10,y*8/10));
+		multiTouchAction.add(touchAction1).add(touchAction2);
+		multiTouchAction.perform();
+	}
+	/**
+	 * 多点触摸之缩小屏幕（LD添加）
+	 *
+	 */
+	public void zoomOut()
+	{
+		MultiTouchAction multiTouchAction=new MultiTouchAction(driver);
+		TouchAction touchAction1=new TouchAction(driver);
+		TouchAction touchAction2=new TouchAction(driver);
+		//得到屏幕的宽度和高度
+		int x=driver.manage().window().getSize().getWidth();
+		int y=driver.manage().window().getSize().getHeight();
+
+		touchAction1.press(PointOption.point(x*2/10,y*2/10)).
+				waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1))).
+				moveTo(PointOption.point(x*4/10,y*4/10));
+		touchAction2.press(PointOption.point(x*8/10,y*8/10)).
+				waitAction(WaitOptions.waitOptions(Duration.ofSeconds(1))).
+				moveTo(PointOption.point(x*6/10,y*6/10));
+		multiTouchAction.add(touchAction1).add(touchAction2);
+		multiTouchAction.perform();
+	}
+
 	/**
 	 * 向手机push文件（LD添加）
 	 *
@@ -73,14 +168,7 @@ public class ElementAction extends TestBaseCase{
 		out.close();
 	}
 
-	/**
-	 * 设置网络状态
-	 *
-	 */
-	public  void tsetNetworkConnection(int status)
-	{
-       driver.setNetworkConnection(new NetworkConnectionSetting(status));
-	}
+
 	/**
 	 * 安装app
 	 */
@@ -102,7 +190,7 @@ public class ElementAction extends TestBaseCase{
 	 */
 	public  boolean  isLockedscreen()
 	{
-        return  driver.isLocked();
+        return  driver.isDeviceLocked();
 	}
 
 	/**
@@ -114,54 +202,58 @@ public class ElementAction extends TestBaseCase{
 	}
 	/**
 	 * 按下安卓手机键.例如home,back等
-	 * HOME键:3
-	 * 菜单键menu:82
-	 * 返回键back:4
+	 * HOME键:3(AndroidKey.HOME)
+	 * 菜单键menu:82(AndroidKey.MENU)
+	 * 返回键back:4(AndroidKey.BACK)
 	 * @param androidKeyCode 通过 AndroidKeyCode 枚举类获取
+	 * 调用方式：action.pressAndroidKey(new KeyEvent(AndroidKey.HOME));
 	 */
-	public  void pressAndroidKey(int androidKeyCode )
+	public void pressAndroidKey(KeyEvent androidKeyCode)
 	{
-		driver.pressKeyCode(androidKeyCode);
+		driver.pressKey(androidKeyCode);
 	}
 
 	/**
 	 * 长按下安卓手机键.例如home,back等
 	 * @param androidKeyCode 通过 AndroidKeyCode 枚举类获取
+	 * 调用方式：action.longPressAndroidKey(new KeyEvent(AndroidKey.HOME));
 	 */
-	public void longPressAndroidKey(int androidKeyCode)
+	public void longPressAndroidKey(KeyEvent androidKeyCode)
 	{
-		driver.longPressKeyCode(androidKeyCode);
+		driver.longPressKey(androidKeyCode);
 	}
 	/**
-	 *长按某个元素
+	 *长按某个元素，后放开手指
 	 * @param locator  元素locator
 	 */
-	public  void longPressAppElement(Locator locator)
+	public  void longPressAppElement(Locator locator,int durationSeconds)
 	{
-		touchAction.longPress(findElement(locator));
+		TouchAction touchAction=new TouchAction(driver);
+		touchAction.perform().longPress(LongPressOptions.longPressOptions().withElement(ElementOption.element(findElement(locator))).withDuration(Duration.ofSeconds(durationSeconds))).cancel();
 
 	}
 
 	/**
-	 * 长按某个元素某个位置
+	 * 长按某个坐标位置，当定位到元素后
 	 * @param locator 元素定位信息
 	 * @param x 元素X坐标
 	 * @param y 元素Y坐标
 	 */
-	public  void longPressAppElement(Locator locator,int x,int y)
+	public  void longPressAppElement(Locator locator,int x,int y,int durationSeconds)
 	{
-		touchAction.longPress(findElement(locator),x,y);
+		TouchAction touchAction=new TouchAction(driver);
+		touchAction.perform().longPress(LongPressOptions.longPressOptions().withElement(ElementOption.element(findElement(locator))).withPosition(PointOption.point(x,y)).withDuration(Duration.ofSeconds(durationSeconds))).cancel();
 	}
 
 	/**
-	 * 长按手机界面某个位置
+	 * 长按手机界面某个坐标位置
 	 * @param x
 	 * @param y
 	 */
-	public  void longPressPosition(int x,int y)
+	public  void longPressPosition(int x,int y,int durationSeconds)
 	{
-		touchAction.longPress(x,y);
-
+		TouchAction touchAction=new TouchAction(driver);
+		touchAction.perform().longPress(LongPressOptions.longPressOptions().withPosition(PointOption.point(x,y)).withDuration(Duration.ofSeconds(durationSeconds))).cancel();
 	}
 
 	/**
@@ -171,57 +263,33 @@ public class ElementAction extends TestBaseCase{
 	 */
 	public  void pressPosition(int x,int y)
 	{
-		touchAction.press(x,y);
+		TouchAction touchAction=new TouchAction(driver);
+		touchAction.perform().press(PointOption.point(x,y));
 
 	}
 
-	/**
-	 * 按住某个元素
-	 * @param locator  元素定位信息
-	 */
-	public  void pressAppElement(Locator locator)
-	{
-		touchAction.press(findElement(locator));
-	}
+
 
 	/**
-	 * 按住某个元素的某个位置
-	 * @param locator 元素定位信息
-	 * @param x 位置x坐标
-	 * @param y 位置y坐标
-	 */
-    public  void  pressAppElement(Locator locator,int x,int y)
-	{
-		touchAction.press(findElement(locator),x,y);
-	}
-
-	/**
-	 * 取消操作
-	 */
-	public  void cancle()
-	{
-		touchAction.cancel();
-	}
-
-	/**
-	 * 移动到某个元素上
+	 * 移动到某个元素上,appium7.3.0版本无法实现该功能
 	 * @param locator
 	 */
-	public void movetoElement(Locator locator)
-	{
-		touchAction.moveTo(findElement(locator));
-	}
+//	public void movetoElement(Locator locator)
+//	{
+//		TouchAction touchAction=new TouchAction(driver);
+//		touchAction.moveTo(findElement(locator));
+//	}
 
 	/**
-	 * 从x,y目标移动到元素
+	 * 从x,y目标移动到元素，appium7.3.0版本无法实现该功能
 	 * @param locator
 	 * @param x
 	 * @param y
 	 */
-	public  void movetoElementPostion(Locator locator,int x,int y)
-	{
-		touchAction.moveTo(findElement(locator),x,y);
-	}
+//	public  void movetoElementPostion(Locator locator,int x,int y)
+//	{
+//		touchAction.moveTo(findElement(locator),x,y);
+//	}
 
 	/**
 	 * 移动到某个位置
@@ -230,7 +298,8 @@ public class ElementAction extends TestBaseCase{
 	 */
 	public  void movetoPostion(int x,int y)
 	{
-		touchAction.moveTo(x,y);
+		TouchAction touchAction=new TouchAction(driver);
+		touchAction.perform().moveTo(PointOption.point(x,y));
 	}
 
 	/**
@@ -239,11 +308,13 @@ public class ElementAction extends TestBaseCase{
 	 * @param y1
 	 * @param x2
 	 * @param y2
-	 * @param wait 等待几秒松开
+	 * @param durationSeconds 等待几秒松开
 	 */
-	public  void swipe(int x1,int y1,int x2,int y2,int wait)
+	public  void swipe(int x1,int y1,int x2,int y2,int durationSeconds)
 	{
-		driver.swipe(x1,y1,x2,y2,wait);
+		TouchAction action1=new TouchAction(driver).press(PointOption.point(x1, y1)).waitAction(WaitOptions.waitOptions(Duration.ofSeconds(durationSeconds)))
+				.moveTo(PointOption.point(x2, y2)).release();
+		action1.perform();
 	}
 
 	/**
@@ -252,7 +323,8 @@ public class ElementAction extends TestBaseCase{
 	 */
 	public  void tap(Locator locator)
 	{
-		touchAction.tap(findElement(locator));
+		TouchAction touchAction=new TouchAction(driver);
+		touchAction.perform().tap(TapOptions.tapOptions().withElement(ElementOption.element(findElement(locator)))).cancel();
 	}
 	/**
 	 * 在控件某个点轻按下
@@ -260,7 +332,8 @@ public class ElementAction extends TestBaseCase{
 	 */
 	public  void tap(Locator locator,int x,int y)
 	{
-		touchAction.tap(findElement(locator),x,y);
+		TouchAction touchAction=new TouchAction(driver);
+		touchAction.perform().tap(TapOptions.tapOptions().withElement(ElementOption.element(findElement(locator))).withPosition(PointOption.point(x,y))).cancel();
 	}
 	/**
 	 * 文本框输入操作
@@ -596,7 +669,7 @@ public class ElementAction extends TestBaseCase{
 	}
 	/**
 	 * 显式等待 判断页面是否完全加载完成
-	 * @param time 已秒为单位
+//	 * @param time 已秒为单位
 	 */
 	public void pagefoload(long time)
 	{
@@ -662,7 +735,6 @@ public class ElementAction extends TestBaseCase{
 		ElementAction action =new ElementAction();
 		WebDriverWait webDriverWait=new WebDriverWait(driver, 30);
 		webDriverWait.until(ExpectedConditions.visibilityOf(action.findElement(locator))).isDisplayed();
-
 	}
 	/**
 	 * 查找一组元素
@@ -752,7 +824,7 @@ public class ElementAction extends TestBaseCase{
 		//Waitformax(Integer.valueOf(locator.getWaitSec()));
 		WebElement webElement=null;
 		try {
-			webElement=(new WebDriverWait(driver, 2)).until(
+			webElement=(new WebDriverWait(driver, 20)).until(
 					new ExpectedCondition<WebElement>() {
 
 						@Override
@@ -951,5 +1023,6 @@ public class ElementAction extends TestBaseCase{
 				+ " &lt;/a&gt;\n&lt;/br&gt;"
 				+ "&lt;div id=\"close\"&gt;&lt;/div&gt;\n");
 	}
+
 
 }
